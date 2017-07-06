@@ -100,7 +100,7 @@ function presenter() {
 				});
 
 		enableStopButton();
-		enableButton('#record', 'record()');
+		//enableButton('#record', 'record()');
 	}
 }
 
