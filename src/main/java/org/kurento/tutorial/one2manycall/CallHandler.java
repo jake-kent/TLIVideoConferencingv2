@@ -59,6 +59,8 @@ public class CallHandler extends TextWebSocketHandler {
   private MediaPipeline pipeline;
   private UserSession presenterUserSession;
   private final RecorderEndpoint recorderCaller;
+  public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
+  public static final String RECORDING_EXT = ".webm";
 
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
