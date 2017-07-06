@@ -162,10 +162,10 @@ public class CallHandler extends TextWebSocketHandler {
         presenterUserSession.sendMessage(response);
       }
       presenterWebRtc.gatherCandidates();
-      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + from + RECORDING_EXT)
+      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + session.getId() + RECORDING_EXT)
         .build();
       presenterWebRtc.connect(recorderCaller);
-      pipeline.record();
+      recorderCaller.record();
 
     } else {
       JsonObject response = new JsonObject();
