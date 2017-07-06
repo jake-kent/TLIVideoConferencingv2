@@ -19,6 +19,7 @@ package org.kurento.tutorial.one2manycall;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.kurento.client.EventListener;
@@ -59,7 +60,8 @@ public class CallHandler extends TextWebSocketHandler {
 
   private MediaPipeline pipeline;
   private UserSession presenterUserSession;
-  private final RecorderEndpoint recorderCaller;
+  private RecorderEndpoint recorderCaller;
+  private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
   public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
   public static final String RECORDING_EXT = ".webm";
 
