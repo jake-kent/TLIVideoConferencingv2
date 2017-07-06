@@ -181,7 +181,7 @@ function disableStopButton() {
 }
 
 function disableRecordButton() {
-	disableButton('#record')
+	disableButton('#record');
 }
 
 function enableStopButton() {
