@@ -18,11 +18,14 @@
 var ws = new WebSocket('wss://' + location.host + '/call');
 var video;
 var webRtcPeer;
+var recording;
 
 window.onload = function() {
 	console = new Console();
 	video = document.getElementById('video');
+	recording = false;
 	disableStopButton();
+	disableRecordButton();
 }
 
 window.onbeforeunload = function() {
@@ -97,6 +100,7 @@ function presenter() {
 				});
 
 		enableStopButton();
+		enableButton('#record', 'record()');
 	}
 }
 
@@ -174,6 +178,10 @@ function disableStopButton() {
 	enableButton('#presenter', 'presenter()');
 	enableButton('#viewer', 'viewer()');
 	disableButton('#stop');
+}
+
+function disableRecordButton() {
+	disableButton('#record')
 }
 
 function enableStopButton() {
