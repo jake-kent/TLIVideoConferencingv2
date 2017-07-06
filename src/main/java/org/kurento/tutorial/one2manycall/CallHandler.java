@@ -155,6 +155,7 @@ public class CallHandler extends TextWebSocketHandler {
         presenterUserSession.sendMessage(response);
       }
       presenterWebRtc.gatherCandidates();
+      pipeline.record()
 
     } else {
       JsonObject response = new JsonObject();
