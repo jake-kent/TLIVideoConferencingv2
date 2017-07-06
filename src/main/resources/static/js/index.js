@@ -43,6 +43,12 @@ ws.onmessage = function(message) {
 	case 'viewerResponse':
 		viewerResponse(parsedMessage);
 		break;
+	case 'addViewerReturn':
+		addViewerReturn(parsedMessage);
+		break;
+	case 'viewerResponseRet':
+		viewerResponseRet(parsedMessage);
+		break;
 	case 'iceCandidate':
 		webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
 			if (error)
@@ -51,6 +57,9 @@ ws.onmessage = function(message) {
 		break;
 	case 'stopCommunication':
 		dispose();
+		break;
+	case 'stopParticipantStream':
+		removeParticipant(parsedMessage);
 		break;
 	default:
 		console.error('Unrecognized message', parsedMessage);
