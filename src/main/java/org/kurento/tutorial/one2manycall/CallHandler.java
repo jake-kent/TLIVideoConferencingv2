@@ -57,6 +57,7 @@ public class CallHandler extends TextWebSocketHandler {
 
   private MediaPipeline pipeline;
   private UserSession presenterUserSession;
+  private final RecorderEndpoint recorderCaller;
 
   @Override
   public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -155,6 +156,9 @@ public class CallHandler extends TextWebSocketHandler {
         presenterUserSession.sendMessage(response);
       }
       presenterWebRtc.gatherCandidates();
+      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + from + RECORDING_EXT)
+        .build();
+      presenterWebRtc.connect(recorderCaller);
       pipeline.record();
 
     } else {
