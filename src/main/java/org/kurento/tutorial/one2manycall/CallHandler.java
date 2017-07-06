@@ -19,6 +19,7 @@ package org.kurento.tutorial.one2manycall;
 
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Date;
 
 import org.kurento.client.EventListener;
 import org.kurento.client.IceCandidate;
