@@ -139,7 +139,11 @@ function viewer() {
 					}
 					this.generateOffer(onOfferViewer);
 				});
-		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+		var options2 = {
+			localVideo : video2,
+			onicecandidate : onIceCandidate
+		}
+		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options2,
 				function(error) {
 					if (error) {
 						return console.error(error);
