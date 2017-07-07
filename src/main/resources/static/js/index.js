@@ -139,7 +139,13 @@ function viewer() {
 					}
 					this.generateOffer(onOfferViewer);
 				});
-
+		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+				function(error) {
+					if (error) {
+						return console.error(error);
+					}
+					webRtcPeer.generateOffer(onOfferPresenter);
+				});
 		enableStopButton();
 	}
 }
