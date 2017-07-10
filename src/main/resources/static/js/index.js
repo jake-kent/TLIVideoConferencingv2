@@ -207,8 +207,8 @@ function dispose() {
 }
 
 function disableStopButton() {
-	enableButton('#presenter', 'addTeacher()');
-	enableButton('#viewer', 'addStudent()');
+	enableButton('#teacher', 'addTeacher()');
+	enableButton('#student', 'addStudent()');
 	disableButton('#stop');
 }
 
@@ -217,8 +217,8 @@ function disableRecordButton() {
 }
 
 function enableStopButton() {
-	disableButton('#presenter');
-	disableButton('#viewer');
+	disableButton('#teacher');
+	disableButton('#student');
 	enableButton('#stop', 'stop()');
 }
 
