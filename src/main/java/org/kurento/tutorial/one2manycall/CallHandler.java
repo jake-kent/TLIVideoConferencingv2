@@ -53,13 +53,13 @@ public class CallHandler extends TextWebSocketHandler {
   private static final Logger log = LoggerFactory.getLogger(CallHandler.class);
   private static final Gson gson = new GsonBuilder().create();
 
-  private final ConcurrentHashMap<String, UserSession> viewers = new ConcurrentHashMap<>();
+  private final ConcurrentHashMap<String, UserSession> students = new ConcurrentHashMap<>();
 
   @Autowired
   private KurentoClient kurento;
 
   private MediaPipeline pipeline;
-  private UserSession presenterUserSession;
+  private UserSession teacherUserSession;
   private RecorderEndpoint recorderCaller;
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
   public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
@@ -71,29 +71,29 @@ public class CallHandler extends TextWebSocketHandler {
     log.debug("Incoming message from session '{}': {}", session.getId(), jsonMessage);
 
     switch (jsonMessage.get("id").getAsString()) {
-      case "presenter":
+      case "addTeacher":
         try {
-          presenter(session, jsonMessage);
+          addTeacher(session, jsonMessage);
         } catch (Throwable t) {
-          handleErrorResponse(t, session, "presenterResponse");
+          handleErrorResponse(t, session, "addTeacherResponse");
         }
         break;
-      case "viewer":
+      case "addStudent":
         try {
-          viewer(session, jsonMessage);
+          addStudent(session, jsonMessage);
         } catch (Throwable t) {
-          handleErrorResponse(t, session, "viewerResponse");
+          handleErrorResponse(t, session, "addStudentResponse");
         }
         break;
       case "onIceCandidate": {
         JsonObject candidate = jsonMessage.get("candidate").getAsJsonObject();
 
         UserSession user = null;
-        if (presenterUserSession != null) {
-          if (presenterUserSession.getSession() == session) {
-            user = presenterUserSession;
+        if (teacherUserSession != null) {
+          if (teacherUserSession.getSession() == session) {
+            user = teacherUserSession;
           } else {
-            user = viewers.get(session.getId());
+            user = students.get(session.getId());
           }
         }
         if (user != null) {
@@ -123,17 +123,17 @@ public class CallHandler extends TextWebSocketHandler {
     session.sendMessage(new TextMessage(response.toString()));
   }
 
-  private synchronized void presenter(final WebSocketSession session, JsonObject jsonMessage)
+  private synchronized void addTeacher(final WebSocketSession session, JsonObject jsonMessage)
       throws IOException {
-    if (presenterUserSession == null) {
-      presenterUserSession = new UserSession(session);
+    if (teacherUserSession == null) {
+      teacherUserSession = new UserSession(session);
 
       pipeline = kurento.createMediaPipeline();
-      presenterUserSession.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
+      teacherUserSession.setWebRtcEndpoint(new WebRtcEndpoint.Builder(pipeline).build());
 
-      WebRtcEndpoint presenterWebRtc = presenterUserSession.getWebRtcEndpoint();
+      WebRtcEndpoint teacherWebRtc = teacherUserSession.getWebRtcEndpoint();
 
-      presenterWebRtc.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
+      teacherWebRtc.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 
         @Override
         public void onEvent(IceCandidateFoundEvent event) {
@@ -151,25 +151,25 @@ public class CallHandler extends TextWebSocketHandler {
       });
 
       String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
-      String sdpAnswer = presenterWebRtc.processOffer(sdpOffer);
+      String sdpAnswer = teacherWebRtc.processOffer(sdpOffer);
 
       JsonObject response = new JsonObject();
-      response.addProperty("id", "presenterResponse");
+      response.addProperty("id", "addTeacherResponse");
       response.addProperty("response", "accepted");
       response.addProperty("sdpAnswer", sdpAnswer);
 
       synchronized (session) {
-        presenterUserSession.sendMessage(response);
+        teacherUserSession.sendMessage(response);
       }
-      presenterWebRtc.gatherCandidates();
+      teacherWebRtc.gatherCandidates();
       recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + session.getId() + RECORDING_EXT)
         .build();
-      presenterWebRtc.connect(recorderCaller);
+      teacherWebRtc.connect(recorderCaller);
       //recorderCaller.record();
 
     } else {
       JsonObject response = new JsonObject();
-      response.addProperty("id", "presenterResponse");
+      response.addProperty("id", "addTeacherResponse");
       response.addProperty("response", "rejected");
       response.addProperty("message",
           "Another user is currently acting as sender. Try again later ...");
@@ -177,27 +177,27 @@ public class CallHandler extends TextWebSocketHandler {
     }
   }
 
-  private synchronized void viewer(final WebSocketSession session, JsonObject jsonMessage)
+  private synchronized void addStudent(final WebSocketSession session, JsonObject jsonMessage)
       throws IOException {
-    if (presenterUserSession == null || presenterUserSession.getWebRtcEndpoint() == null) {
+    if (teacherUserSession == null || teacherUserSession.getWebRtcEndpoint() == null) {
       JsonObject response = new JsonObject();
-      response.addProperty("id", "viewerResponse");
+      response.addProperty("id", "addStudentResponse");
       response.addProperty("response", "rejected");
       response.addProperty("message",
           "No active sender now. Become sender or . Try again later ...");
       session.sendMessage(new TextMessage(response.toString()));
     } else {
-      if (viewers.containsKey(session.getId())) {
+      if (students.containsKey(session.getId())) {
         JsonObject response = new JsonObject();
-        response.addProperty("id", "viewerResponse");
+        response.addProperty("id", "addStudentResponse");
         response.addProperty("response", "rejected");
         response.addProperty("message", "You are already viewing in this session. "
-            + "Use a different browser to add additional viewers.");
+            + "Use a different browser to add additional students.");
         session.sendMessage(new TextMessage(response.toString()));
         return;
       }
-      UserSession viewer = new UserSession(session);
-      viewers.put(session.getId(), viewer);
+      UserSession student = new UserSession(session);
+      students.put(session.getId(), student);
 
       WebRtcEndpoint nextWebRtc = new WebRtcEndpoint.Builder(pipeline).build();
 
@@ -218,18 +218,18 @@ public class CallHandler extends TextWebSocketHandler {
         }
       });
 
-      viewer.setWebRtcEndpoint(nextWebRtc);
-      presenterUserSession.getWebRtcEndpoint().connect(nextWebRtc);
+      student.setWebRtcEndpoint(nextWebRtc);
+      teacherUserSession.getWebRtcEndpoint().connect(nextWebRtc);
       String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
       String sdpAnswer = nextWebRtc.processOffer(sdpOffer);
 
       JsonObject response = new JsonObject();
-      response.addProperty("id", "viewerResponse");
+      response.addProperty("id", "addStudentResponse");
       response.addProperty("response", "accepted");
       response.addProperty("sdpAnswer", sdpAnswer);
 
       synchronized (session) {
-        viewer.sendMessage(response);
+        student.sendMessage(response);
       }
       nextWebRtc.gatherCandidates();
     }
@@ -237,11 +237,11 @@ public class CallHandler extends TextWebSocketHandler {
 
   private synchronized void stop(WebSocketSession session) throws IOException {
     String sessionId = session.getId();
-    if (presenterUserSession != null && presenterUserSession.getSession().getId().equals(sessionId)) {
-      for (UserSession viewer : viewers.values()) {
+    if (teacherUserSession != null && teacherUserSession.getSession().getId().equals(sessionId)) {
+      for (UserSession student : students.values()) {
         JsonObject response = new JsonObject();
         response.addProperty("id", "stopCommunication");
-        viewer.sendMessage(response);
+        student.sendMessage(response);
       }
 
       log.info("Releasing media pipeline");
@@ -249,12 +249,12 @@ public class CallHandler extends TextWebSocketHandler {
         pipeline.release();
       }
       pipeline = null;
-      presenterUserSession = null;
-    } else if (viewers.containsKey(sessionId)) {
-      if (viewers.get(sessionId).getWebRtcEndpoint() != null) {
-        viewers.get(sessionId).getWebRtcEndpoint().release();
+      teacherUserSession = null;
+    } else if (students.containsKey(sessionId)) {
+      if (students.get(sessionId).getWebRtcEndpoint() != null) {
+        students.get(sessionId).getWebRtcEndpoint().release();
       }
-      viewers.remove(sessionId);
+      students.remove(sessionId);
     }
   }
 
