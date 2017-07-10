@@ -201,7 +201,7 @@ function dispose() {
 		mainWebRtcPeer.dispose();
 		mainWwebRtcPeer = null;
 	}
-	hideSpinner(video);
+	hideSpinner(mainVideo);
 
 	disableStopButton();
 }
