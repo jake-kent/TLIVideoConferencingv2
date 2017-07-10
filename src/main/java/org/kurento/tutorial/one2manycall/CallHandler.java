@@ -236,6 +236,7 @@ public class CallHandler extends TextWebSocketHandler {
       synchronized (session) {
         student.sendMessage(response);
       }
+      teacherUserSession.sendMessage(response);
       nextWebRtc.gatherCandidates();
     }
   }
