@@ -123,7 +123,7 @@ function addTeacherResponse(message) {
 }
 
 function addStudentToTeacher(parsedMessage) {
-	console,log(parsedMessage);
+	console.log(parsedMessage);
 	// add student id to list with corresponding video id
 	// add video to videos list
 }
@@ -144,7 +144,7 @@ function addStudent() {
 			localVideo: tempPlayer,
 			onicecandidate : onIceCandidate
 		}
-		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvOnly(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
