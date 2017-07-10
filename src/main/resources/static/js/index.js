@@ -24,12 +24,14 @@ var mainVideo;
 var otherVideos;
 var mainWebRtcPeer;
 var otherWebRtcPeers;
+var newVideoId;
 
 window.onload = function() {
 	console = new Console();
 	mainVideo = document.getElementById('mainVideo');
 	otherVideos = [];
 	otherWebRtcPeers = [];
+	newVideoId = 0;
 
 	disableStopButton();
 	disableRecordButton();
@@ -44,11 +46,8 @@ ws.onmessage = function(message) {
 	console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
-		case 'addTeacherResponse': #
+		case 'addTeacherResponse':
 			addTeacherResponse(parsedMessage);
-			break;
-		case 'removeTeacherResponse':
-			removeTeacherResponse(parsedMessage);
 			break;
 		case 'addStudentToTeacher':
 			addStudentToTeacher(parsedMessage);
@@ -56,7 +55,7 @@ ws.onmessage = function(message) {
 		case 'removeStudentToTeacher':
 			removeStudentToTeacher(parsedMessage);
 			break;
-		case 'addStudentResponse': #
+		case 'addStudentResponse'
 			addStudentResponse(parsedMessage);
 			break;
 		case 'removeStudentResponse':
@@ -121,6 +120,16 @@ function addTeacherResponse(message) {
 	}
 }
 
+function addStudentToTeacher(parsedMessage) {
+	// add student id to list with corresponding video id
+	// add video to videos list
+}
+
+function removeStudentToTeacher(parsedMessage) {
+	// remove student id to list
+	// remove video to videos list
+}
+
 function addStudent() {
 	if (!webRtcPeer) {
 		showSpinner(mainVideo);
@@ -162,6 +171,11 @@ function addStudentResponse(message) {
 				return console.error(error);
 		});
 	}
+}
+
+function removeStudentResponse(parsedMessage) {
+	// purge students list
+	// remove own video and display "disconnected in teacher video"
 }
 
 function onIceCandidate(candidate) {
@@ -219,11 +233,11 @@ function enableButton(id, functionName) {
 }
 
 function addVideoPlayer(playerID) {
-	// body...
+	// add new player to student players list with id=playerID
 }
 
 function removeVideoPlayer(playerID) {
-	// body...
+	// remove player from student players list by playerID
 }
 
 function sendMessage(message) {
