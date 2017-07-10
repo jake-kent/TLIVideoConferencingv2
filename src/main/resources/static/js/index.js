@@ -62,7 +62,7 @@ ws.onmessage = function(message) {
 			removeStudentResponse(parsedMessage);
 			break;
 		case 'iceCandidate':
-			webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
+			mainWebRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
 				if (error)
 					return console.error('Error adding candidate: ' + error);
 			});
