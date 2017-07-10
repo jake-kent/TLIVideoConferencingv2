@@ -101,7 +101,7 @@ function onOfferTeacher(error, offerSdp) {
 		return console.error('Error generating the offer');
 	console.info('Invoking SDP offer callback function ' + location.host);
 	var message = {
-		id : 'presenter',
+		id : 'addTeacher',
 		sdpOffer : offerSdp
 	}
 	sendMessage(message);
@@ -154,7 +154,7 @@ function onOfferStudent(error, offerSdp) {
 		return console.error('Error generating the offer');
 	console.info('Invoking SDP offer callback function ' + location.host);
 	var message = {
-		id : 'viewer',
+		id : 'addStudent',
 		sdpOffer : offerSdp
 	}
 	sendMessage(message);
