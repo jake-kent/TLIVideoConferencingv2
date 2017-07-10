@@ -55,7 +55,7 @@ ws.onmessage = function(message) {
 		case 'removeStudentToTeacher':
 			removeStudentToTeacher(parsedMessage);
 			break;
-		case 'addStudentResponse'
+		case 'addStudentResponse':
 			addStudentResponse(parsedMessage);
 			break;
 		case 'removeStudentResponse':
