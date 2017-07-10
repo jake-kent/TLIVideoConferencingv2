@@ -83,12 +83,12 @@ function addTeacher() {
 			localVideo : mainVideo,
 			onicecandidate : onIceCandidate
 		}
-		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
 					}
-					webRtcPeer.generateOffer(onOfferTeacher);
+					mainWebRtcPeer.generateOffer(onOfferTeacher);
 				});
 
 		enableStopButton();
@@ -166,7 +166,7 @@ function addStudentResponse(message) {
 		console.info('Call not accepted for the following reason: ' + errorMsg);
 		dispose();
 	} else {
-		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
+		mainWebRtcPeer.processAnswer(message.sdpAnswer, function(error) {
 			if (error)
 				return console.error(error);
 		});
@@ -197,9 +197,9 @@ function stop() {
 }
 
 function dispose() {
-	if (webRtcPeer) {
-		webRtcPeer.dispose();
-		webRtcPeer = null;
+	if (mainWebRtcPeer) {
+		mainWebRtcPeer.dispose();
+		mainWwebRtcPeer = null;
 	}
 	hideSpinner(video);
 
