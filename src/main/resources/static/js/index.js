@@ -241,8 +241,11 @@ function enableButton(id, functionName) {
 
 function addVideoPlayer(playerID) {
 	console.log(otherVideos);
-	otherVideos.appendChild("<li><video id='cam-" + playerID + "' autoplay width='640px'" +
-		"height='480px' poster='img/webrtc.png'></video></li>")
+	var li = document.createElement("LI");
+	li.innerHTML = "<video id='cam-" + playerID + "' autoplay width='640px'" +
+		"height='480px' poster='img/webrtc.png'></video>"
+	
+	otherVideos.appendChild(li);
 	
 }
 
