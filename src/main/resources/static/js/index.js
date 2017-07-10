@@ -113,7 +113,7 @@ function addTeacherResponse(message) {
 		console.info('Call not accepted for the following reason: ' + errorMsg);
 		dispose();
 	} else {
-		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
+		mainWebRtcPeer.processAnswer(message.sdpAnswer, function(error) {
 			if (error)
 				return console.error(error);
 		});
@@ -131,14 +131,14 @@ function removeStudentToTeacher(parsedMessage) {
 }
 
 function addStudent() {
-	if (!webRtcPeer) {
+	if (!mainwebRtcPeer) {
 		showSpinner(mainVideo);
 
 		var options = {
 			remoteVideo : mainVideo,
 			onicecandidate : onIceCandidate
 		}
-		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
