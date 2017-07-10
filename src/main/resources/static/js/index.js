@@ -15,15 +15,22 @@
  *
  */
 
+/* <video id="video2" autoplay width="640px" height="480px"
+						poster="img/webrtc.png"></video>
+*/
+
 var ws = new WebSocket('wss://' + location.host + '/call');
-var video;
-var webRtcPeer;
-var recording;
+var mainVideo;
+var otherVideos;
+var mainWebRtcPeer;
+var otherWebRtcPeers;
 
 window.onload = function() {
 	console = new Console();
-	video = document.getElementById('video');
-	recording = false;
+	mainVideo = document.getElementById('mainVideo');
+	otherVideos = [];
+	otherWebRtcPeers = [];
+
 	disableStopButton();
 	disableRecordButton();
 }
@@ -37,67 +44,44 @@ ws.onmessage = function(message) {
 	console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
-	case 'presenterResponse':
-		presenterResponse(parsedMessage);
-		break;
-	case 'viewerResponse':
-		viewerResponse(parsedMessage);
-		break;
-	case 'addViewerReturn':
-		addViewerReturn(parsedMessage);
-		break;
-	case 'viewerResponseRet':
-		viewerResponseRet(parsedMessage);
-		break;
-	case 'iceCandidate':
-		webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
-			if (error)
-				return console.error('Error adding candidate: ' + error);
-		});
-		break;
-	case 'stopCommunication':
-		dispose();
-		break;
-	case 'stopParticipantStream':
-		removeParticipant(parsedMessage);
-		break;
-	default:
-		console.error('Unrecognized message', parsedMessage);
+		case 'addTeacherResponse': #
+			addTeacherResponse(parsedMessage);
+			break;
+		case 'removeTeacherResponse':
+			removeTeacherResponse(parsedMessage);
+			break;
+		case 'addStudentToTeacher':
+			addStudentToTeacher(parsedMessage);
+			break;
+		case 'removeStudentToTeacher':
+			removeStudentToTeacher(parsedMessage);
+			break;
+		case 'addStudentResponse': #
+			addStudentResponse(parsedMessage);
+			break;
+		case 'removeStudentResponse':
+			removeStudentResponse(parsedMessage);
+			break;
+		case 'iceCandidate':
+			webRtcPeer.addIceCandidate(parsedMessage.candidate, function(error) {
+				if (error)
+					return console.error('Error adding candidate: ' + error);
+			});
+			break;
+		case 'stopCommunication':
+			dispose();
+			break;
+		default:
+			console.error('Unrecognized message', parsedMessage);
 	}
 }
 
-function presenterResponse(message) {
-	if (message.response != 'accepted') {
-		var errorMsg = message.message ? message.message : 'Unknow error';
-		console.info('Call not accepted for the following reason: ' + errorMsg);
-		dispose();
-	} else {
-		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
-			if (error)
-				return console.error(error);
-		});
-	}
-}
-
-function viewerResponse(message) {
-	if (message.response != 'accepted') {
-		var errorMsg = message.message ? message.message : 'Unknow error';
-		console.info('Call not accepted for the following reason: ' + errorMsg);
-		dispose();
-	} else {
-		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
-			if (error)
-				return console.error(error);
-		});
-	}
-}
-
-function presenter() {
+function addTeacher() {
 	if (!webRtcPeer) {
-		showSpinner(video);
+		showSpinner(mainVideo);
 
 		var options = {
-			localVideo : video,
+			localVideo : mainVideo,
 			onicecandidate : onIceCandidate
 		}
 		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
@@ -105,7 +89,7 @@ function presenter() {
 					if (error) {
 						return console.error(error);
 					}
-					webRtcPeer.generateOffer(onOfferPresenter);
+					webRtcPeer.generateOffer(onOfferTeacher);
 				});
 
 		enableStopButton();
@@ -113,7 +97,7 @@ function presenter() {
 	}
 }
 
-function onOfferPresenter(error, offerSdp) {
+function onOfferTeacher(error, offerSdp) {
 	if (error)
 		return console.error('Error generating the offer');
 	console.info('Invoking SDP offer callback function ' + location.host);
@@ -124,12 +108,25 @@ function onOfferPresenter(error, offerSdp) {
 	sendMessage(message);
 }
 
-function viewer() {
+function addTeacherResponse(message) {
+	if (message.response != 'accepted') {
+		var errorMsg = message.message ? message.message : 'Unknow error';
+		console.info('Call not accepted for the following reason: ' + errorMsg);
+		dispose();
+	} else {
+		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
+			if (error)
+				return console.error(error);
+		});
+	}
+}
+
+function addStudent() {
 	if (!webRtcPeer) {
-		showSpinner(video);
+		showSpinner(mainVideo);
 
 		var options = {
-			remoteVideo : video,
+			remoteVideo : mainVideo,
 			onicecandidate : onIceCandidate
 		}
 		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
@@ -137,24 +134,13 @@ function viewer() {
 					if (error) {
 						return console.error(error);
 					}
-					this.generateOffer(onOfferViewer);
-				});
-		var options2 = {
-			localVideo : video2,
-			onicecandidate : onIceCandidate
-		}
-		webRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options2,
-				function(error) {
-					if (error) {
-						return console.error(error);
-					}
-					webRtcPeer.generateOffer(onOfferPresenter);
+					this.generateOffer(onOfferStudent);
 				});
 		enableStopButton();
 	}
 }
 
-function onOfferViewer(error, offerSdp) {
+function onOfferStudent(error, offerSdp) {
 	if (error)
 		return console.error('Error generating the offer');
 	console.info('Invoking SDP offer callback function ' + location.host);
@@ -163,6 +149,19 @@ function onOfferViewer(error, offerSdp) {
 		sdpOffer : offerSdp
 	}
 	sendMessage(message);
+}
+
+function addStudentResponse(message) {
+	if (message.response != 'accepted') {
+		var errorMsg = message.message ? message.message : 'Unknow error';
+		console.info('Call not accepted for the following reason: ' + errorMsg);
+		dispose();
+	} else {
+		webRtcPeer.processAnswer(message.sdpAnswer, function(error) {
+			if (error)
+				return console.error(error);
+		});
+	}
 }
 
 function onIceCandidate(candidate) {
@@ -194,8 +193,8 @@ function dispose() {
 }
 
 function disableStopButton() {
-	enableButton('#presenter', 'presenter()');
-	enableButton('#viewer', 'viewer()');
+	enableButton('#presenter', 'addTeacher()');
+	enableButton('#viewer', 'addStudent()');
 	disableButton('#stop');
 }
 
@@ -217,6 +216,14 @@ function disableButton(id) {
 function enableButton(id, functionName) {
 	$(id).attr('disabled', false);
 	$(id).attr('onclick', functionName);
+}
+
+function addVideoPlayer(playerID) {
+	// body...
+}
+
+function removeVideoPlayer(playerID) {
+	// body...
 }
 
 function sendMessage(message) {
