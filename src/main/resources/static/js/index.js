@@ -29,6 +29,7 @@ var newVideoId;
 window.onload = function() {
 	console = new Console();
 	mainVideo = document.getElementById('mainVideo');
+	otherVideos = document.getElementById('student-cams');
 	otherVideos = [];
 	otherWebRtcPeers = [];
 	newVideoId = 0;
@@ -133,12 +134,15 @@ function removeStudentToTeacher(parsedMessage) {
 function addStudent() {
 	if (!mainWebRtcPeer) {
 		showSpinner(mainVideo);
-
+		addVideoPlayer(newVideoId);
+		var tempPlayer = document.getElementById("cam-"+newVideoId);
+		showSpinner(tempPlayer)
 		var options = {
 			remoteVideo : mainVideo,
+			localVideo: tempPlayer,
 			onicecandidate : onIceCandidate
 		}
-		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerRecvonly(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
@@ -146,6 +150,8 @@ function addStudent() {
 					this.generateOffer(onOfferStudent);
 				});
 		enableStopButton();
+
+		newVideoId = newVideoId + 1;
 	}
 }
 
@@ -233,7 +239,9 @@ function enableButton(id, functionName) {
 }
 
 function addVideoPlayer(playerID) {
-	// add new player to student players list with id=playerID
+	otherVideos.appendChild("<li><video id='cam-" + playerID + "' autoplay width='640px'" +
+		"height='480px' poster='img/webrtc.png'></video></li>")
+	
 }
 
 function removeVideoPlayer(playerID) {
