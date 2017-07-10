@@ -22,6 +22,7 @@
 var ws = new WebSocket('wss://' + location.host + '/call');
 var mainVideo;
 var otherVideos;
+var otherVideosList;
 var mainWebRtcPeer;
 var otherWebRtcPeers;
 var newVideoId;
@@ -30,7 +31,7 @@ window.onload = function() {
 	console = new Console();
 	mainVideo = document.getElementById('mainVideo');
 	otherVideos = document.getElementById('student-cams');
-	otherVideos = [];
+	otherVideosList = [];
 	otherWebRtcPeers = [];
 	newVideoId = 0;
 
