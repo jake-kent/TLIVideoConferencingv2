@@ -220,6 +220,11 @@ public class CallHandler extends TextWebSocketHandler {
 
       student.setWebRtcEndpoint(nextWebRtc);
       teacherUserSession.getWebRtcEndpoint().connect(nextWebRtc);
+
+      WebRtcEndpoint studTeachWebRtc = new WebRtcEndpoint.Builder(pipeline).build();
+      teacherUserSession.setWebRtcEndpoint(studTeachWebRtc);
+      student.getWebRtcEndpoint().connect(studTeachWebRtc);
+
       String sdpOffer = jsonMessage.getAsJsonPrimitive("sdpOffer").getAsString();
       String sdpAnswer = nextWebRtc.processOffer(sdpOffer);
 
