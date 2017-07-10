@@ -131,7 +131,7 @@ function removeStudentToTeacher(parsedMessage) {
 }
 
 function addStudent() {
-	if (!mainwebRtcPeer) {
+	if (!mainWebRtcPeer) {
 		showSpinner(mainVideo);
 
 		var options = {
