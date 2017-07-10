@@ -76,7 +76,7 @@ ws.onmessage = function(message) {
 }
 
 function addTeacher() {
-	if (!webRtcPeer) {
+	if (!mainWebRtcPeer) {
 		showSpinner(mainVideo);
 
 		var options = {
