@@ -78,3 +78,7 @@ div.dragged {
 	border-color: blue !important;
 	z-index: 10 !important;
 }
+
+#student-cams {
+	list-style: none;
+}
