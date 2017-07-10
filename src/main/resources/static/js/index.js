@@ -123,6 +123,7 @@ function addTeacherResponse(message) {
 }
 
 function addStudentToTeacher(parsedMessage) {
+	console,log(parsedMessage);
 	// add student id to list with corresponding video id
 	// add video to videos list
 }
