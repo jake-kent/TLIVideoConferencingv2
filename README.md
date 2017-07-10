@@ -1,4 +1,4 @@
-TLI Teacher to Student(s) Video Conferencing w/ Server-side Recording
+[TLI](http://www.tli.com.tw/) Teacher to Student(s) Video Conferencing w/ Server-side Recording
 =====================
 
 By: [Jake Kent](https://github.com/jake-kent)
@@ -20,8 +20,8 @@ Within the resulting shell:
 - sudo apt-get install git maven
 - sudo apt-get install openjdk-7-jdk openjdk-7-doc openjdk-7-jre-lib
 
-Clone this repository into the location of your choice and run:
+- Clone this repository into the location of your choice and run:
 
-mvn compile exec:java
+- mvn compile exec:java
 
-A port for the app can be specified in pom.xml
+- A port for the app can be specified in pom.xml
