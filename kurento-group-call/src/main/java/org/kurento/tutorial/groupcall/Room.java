@@ -87,6 +87,7 @@ public class Room implements Closeable {
     final List<String> participantsList = new ArrayList<>(participants.values().size());
     log.info("ROOM {}: participants count {}", name, participantsList.size());
     newParticipant.setIsTeacher(participantsList.size() <= 0);
+    log.info("PARTICIPANT: isTeacher (t/f) {}", name, newParticipant.isTeacher);
     log.debug("ROOM {}: notifying other participants of new participant {}", name,
         newParticipant.getName());
 
@@ -139,6 +140,7 @@ public class Room implements Closeable {
 
     final JsonObject existingParticipantsMsg = new JsonObject();
     existingParticipantsMsg.addProperty("id", "existingParticipants");
+    existingParticipantsMsg.addProperty("selfIsTeacher", user.getIsTeacher());
     existingParticipantsMsg.add("data", participantsArray);
     log.debug("PARTICIPANT {}: sending a list of {} participants", user.getName(),
         participantsArray.size());

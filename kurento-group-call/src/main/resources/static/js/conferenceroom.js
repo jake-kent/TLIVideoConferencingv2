@@ -102,7 +102,7 @@ function onExistingParticipants(msg) {
 		}
 	};
 	console.log(name + " registered in room " + room);
-	var participant = new Participant(name, false);
+	var participant = new Participant(name, msg.selfIsTeacher != null : msg.selfIsTeacher ? false);
 	participants[name] = participant;
 	var video = participant.getVideoElement();
 

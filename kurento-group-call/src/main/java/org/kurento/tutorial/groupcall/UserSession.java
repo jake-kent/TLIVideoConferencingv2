@@ -89,6 +89,10 @@ public class UserSession implements Closeable {
     return outgoingMedia;
   }
 
+  public boolean getIsTeacher(){
+    return isTeacher;
+  }
+
   public void setIsTeacher(boolean isTeacher){
     this.isTeacher = isTeacher;
   }
