@@ -83,6 +83,7 @@ function addTeacher() {
 
 		var options = {
 			localVideo : mainVideo,
+			remoteVideo: otherVideos
 			onicecandidate : onIceCandidate
 		}
 		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options,
