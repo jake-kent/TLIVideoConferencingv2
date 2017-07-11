@@ -140,19 +140,21 @@ public class Room implements Closeable {
 
     final JsonArray participantsArray = new JsonArray();
     boolean teacherInRoom = false;
-    for (final UserSession participant : this.getParticipants()) {
-      if (!participant.equals(user)) {
-        if (user.getIsTeacher() == true) {
-          final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add(participantName);
-        }
-        if (participant.getIsTeacher() == true && user.getIsTeacher() == false) {
+    if (user.getIsTeacher() == true) {
+      teacherInRoom = true;
+      for (final UserSession participant : this.getParticipants()) {
+        if (!participant.equals(user)) {
           final JsonElement participantName = new JsonPrimitive(participant.getName());
           participantsArray.add(participantName);
         }
       }
-      if (participant.getIsTeacher() == true) {
-        teacherInRoom = true;
+    }
+    else {
+      for (final UserSession participant : this.getParticipants()) {
+        if (participant.getIsTeacher() == true){
+          final JsonElement participantName = new JsonPrimitive(participant.getName());
+          participantsArray.add(participantName);
+        }
       }
     }
 
