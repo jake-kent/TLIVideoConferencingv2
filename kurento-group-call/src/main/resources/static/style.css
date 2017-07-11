@@ -226,6 +226,10 @@ input[type=button]:active, input[type=submit]:active {
 	bottom: 10px;
 }
 
+#teacher-container {
+	width: 100%;
+}
+
 .participant {
 	border-radius: 4px;
 	/* border: 2px groove; */

@@ -45,6 +45,8 @@ import com.google.gson.JsonPrimitive;
 public class Room implements Closeable {
   private final Logger log = LoggerFactory.getLogger(Room.class);
 
+  private final String teacherName;
+
   private final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
   private final MediaPipeline pipeline;
   private final String name;
@@ -97,9 +99,14 @@ public class Room implements Closeable {
       participantsList.add(participant.getName());
     }
 
-    log.info("ROOM {}: participants count {}", name, participantsList.size());
+
+    //////----------- TODO: criteria for setting isTeacher
+
+
     newParticipant.setIsTeacher(participantsList.size() <= 0);
-    log.info("PARTICIPANT: isTeacher (t/f) {}", name, newParticipant.getIsTeacher());
+    if (participantsList.size() <= 0) {
+      teacherName = newParticipant.getName()
+    }
 
     return participantsList;
   }
@@ -132,16 +139,27 @@ public class Room implements Closeable {
   public void sendParticipantNames(UserSession user) throws IOException {
 
     final JsonArray participantsArray = new JsonArray();
+    boolean teacherInRoom = false;
     for (final UserSession participant : this.getParticipants()) {
       if (!participant.equals(user)) {
-        final JsonElement participantName = new JsonPrimitive(participant.getName());
-        participantsArray.add(participantName);
+        if (user.getIsTeacher() == true) {
+          final JsonElement participantName = new JsonPrimitive(participant.getName());
+          participantsArray.add(participantName);
+        }
+        if (participant.getIsTeacher() == true && user.getIsTeacher() == false) {
+          final JsonElement participantName = new JsonPrimitive(participant.getName());
+          participantsArray.add(participantName);
+        }
+      }
+      if (participant.getIsTeacher() == true) {
+        teacherInRoom = true;
       }
     }
 
     final JsonObject existingParticipantsMsg = new JsonObject();
     existingParticipantsMsg.addProperty("id", "existingParticipants");
     existingParticipantsMsg.addProperty("selfIsTeacher", user.getIsTeacher());
+    existingParticipantsMsg.addProperty("teacherInRoom", teacherInRoom);
     existingParticipantsMsg.add("data", participantsArray);
     log.debug("PARTICIPANT {}: sending a list of {} participants", user.getName(),
         participantsArray.size());
