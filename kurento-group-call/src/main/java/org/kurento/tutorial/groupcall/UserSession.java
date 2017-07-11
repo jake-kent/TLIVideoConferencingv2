@@ -59,7 +59,7 @@ public class UserSession implements Closeable {
 
     this.pipeline = pipeline;
     this.name = name;
-    this.isTeacher;
+    this.isTeacher = false;
     this.session = session;
     this.roomName = roomName;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
