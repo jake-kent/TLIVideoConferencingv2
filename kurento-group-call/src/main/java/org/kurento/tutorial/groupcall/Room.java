@@ -66,8 +66,7 @@ public class Room implements Closeable {
 
   public UserSession join(String userName, WebSocketSession session) throws IOException {
     log.info("ROOM {}: adding participant {}", userName, userName);
-    log.info("ROOM {}: participant count {}", userName, participants.values().size());
-    final UserSession participant = new UserSession(userName, this.name, participants.values().size().equals(0), session, this.pipeline);
+    final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
     joinRoom(participant);
     participants.put(participant.getName(), participant);
     sendParticipantNames(participant);
@@ -86,6 +85,9 @@ public class Room implements Closeable {
     newParticipantMsg.addProperty("name", newParticipant.getName());
 
     final List<String> participantsList = new ArrayList<>(participants.values().size());
+    log.debug("ROOM {}: participants count {}", name,
+        participantsList.size());
+    newParticipant.isTeacher = participantsList.size().equals(0);
     log.debug("ROOM {}: notifying other participants of new participant {}", name,
         newParticipant.getName());
 
