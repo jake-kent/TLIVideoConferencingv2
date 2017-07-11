@@ -46,6 +46,7 @@ public class UserSession implements Closeable {
   private static final Logger log = LoggerFactory.getLogger(UserSession.class);
 
   private final String name;
+  private final boolean isTeacher;
   private final WebSocketSession session;
 
   private final MediaPipeline pipeline;
@@ -85,6 +86,10 @@ public class UserSession implements Closeable {
 
   public WebRtcEndpoint getOutgoingWebRtcPeer() {
     return outgoingMedia;
+  }
+
+  public void setIsTeacher(boolean isTeacher){
+    this.isTeacher = isTeacher;
   }
 
   public String getName() {
