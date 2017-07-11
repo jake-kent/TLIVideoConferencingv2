@@ -85,7 +85,7 @@ function addTeacher() {
 			localVideo : mainVideo,
 			onicecandidate : onIceCandidate
 		}
-		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
