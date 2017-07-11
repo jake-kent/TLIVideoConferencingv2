@@ -144,7 +144,7 @@ function addStudent() {
 			localVideo: tempPlayer,
 			onicecandidate : onIceCandidate
 		}
-		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendRecv(options,
+		mainWebRtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendrecv(options,
 				function(error) {
 					if (error) {
 						return console.error(error);
