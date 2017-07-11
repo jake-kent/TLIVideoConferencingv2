@@ -28,9 +28,9 @@ const PARTICIPANT_CLASS = 'participant';
  */
 function Participant(name, isTeacher) {
 	this.name = name;
-	var teacher;
+	var isTeacher = isTeacher;
 	var container = document.createElement('div');
-	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
+	container.className = !isTeacher ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = name;
 	var span = document.createElement('span');
 	var video = document.createElement('video');
@@ -39,7 +39,13 @@ function Participant(name, isTeacher) {
 	container.appendChild(video);
 	container.appendChild(span);
 	container.onclick = switchContainerClass;
-	document.getElementById('participants').appendChild(container);
+	if (isTeacher) {
+		document.getElementById('teacher-container').appendChild(container);
+	}
+	else {
+		document.getElementById('participants').appendChild(container);
+	}
+	
 
 	span.appendChild(document.createTextNode(name));
 
