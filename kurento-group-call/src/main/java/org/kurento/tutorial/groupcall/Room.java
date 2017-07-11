@@ -105,7 +105,7 @@ public class Room implements Closeable {
 
     newParticipant.setIsTeacher(participantsList.size() <= 0);
     if (participantsList.size() <= 0) {
-      teacherName = newParticipant.getName()
+      teacherName = newParticipant.getName();
     }
 
     return participantsList;
