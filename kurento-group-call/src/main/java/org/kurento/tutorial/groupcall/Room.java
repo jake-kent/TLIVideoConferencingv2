@@ -85,9 +85,6 @@ public class Room implements Closeable {
     newParticipantMsg.addProperty("name", newParticipant.getName());
 
     final List<String> participantsList = new ArrayList<>(participants.values().size());
-    log.info("ROOM {}: participants count {}", name, participantsList.size());
-    newParticipant.setIsTeacher(participantsList.size() <= 0);
-    log.info("PARTICIPANT: isTeacher (t/f) {}", name, newParticipant.getIsTeacher());
     log.debug("ROOM {}: notifying other participants of new participant {}", name,
         newParticipant.getName());
 
@@ -99,6 +96,10 @@ public class Room implements Closeable {
       }
       participantsList.add(participant.getName());
     }
+
+    log.info("ROOM {}: participants count {}", name, participantsList.size());
+    newParticipant.setIsTeacher(participantsList.size() <= 0);
+    log.info("PARTICIPANT: isTeacher (t/f) {}", name, newParticipant.getIsTeacher());
 
     return participantsList;
   }
