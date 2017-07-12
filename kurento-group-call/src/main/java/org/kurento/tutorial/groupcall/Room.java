@@ -68,7 +68,11 @@ public class Room implements Closeable {
 
   public UserSession join(String userName, WebSocketSession session) throws IOException {
     log.info("ROOM {}: adding participant {}", userName, userName);
-    final UserSession participant = new UserSession(userName, this.name, session, this.pipeline);
+
+    // TODO: increase the security of setting is teacher
+    boolean isTeacherUN = userName.contains('teacher') || userName.contains('Teacher');
+
+    final UserSession participant = new UserSession(userName, this.name, session, isTeacherUN, this.pipeline);
     joinRoom(participant);
     participants.put(participant.getName(), participant);
     sendParticipantNames(participant);
@@ -92,7 +96,13 @@ public class Room implements Closeable {
 
     for (final UserSession participant : participants.values()) {
       try {
-        participant.sendMessage(newParticipantMsg);
+        if (participant.getIsTeacher() == true) {
+          participant.sendMessage(newParticipantMsg);
+        }
+        else if (participant.getIsTeacher() == false && newParticipant.getIsTeacher() == true) {
+          participant.sendMessage(newParticipantMsg);
+        }
+        
       } catch (final IOException e) {
         log.debug("ROOM {}: participant {} could not be notified", name, participant.getName(), e);
       }
@@ -100,13 +110,11 @@ public class Room implements Closeable {
     }
 
 
-    //////----------- TODO: criteria for setting isTeacher
-
-
+    /*
     newParticipant.setIsTeacher(participantsList.size() <= 0);
     if (participantsList.size() <= 0) {
       teacherName = newParticipant.getName();
-    }
+    }*/
 
     return participantsList;
   }
@@ -145,7 +153,7 @@ public class Room implements Closeable {
       for (final UserSession participant : this.getParticipants()) {
         if (!participant.equals(user)) {
           final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add(participantName);
+          participantsArray.add((participantName, participant.getIsTeacher()));
         }
       }
     }
@@ -153,7 +161,7 @@ public class Room implements Closeable {
       for (final UserSession participant : this.getParticipants()) {
         if (participant.getIsTeacher() == true){
           final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add(participantName);
+          participantsArray.add((participantName, participant.getIsTeacher()));
         }
       }
     }

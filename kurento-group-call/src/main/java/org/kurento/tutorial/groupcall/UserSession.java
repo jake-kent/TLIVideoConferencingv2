@@ -57,11 +57,11 @@ public class UserSession implements Closeable {
   private boolean isTeacher;
 
   public UserSession(final String name, String roomName, final WebSocketSession session,
-      MediaPipeline pipeline) {
+      boolean isTeacher, MediaPipeline pipeline) {
 
     this.pipeline = pipeline;
     this.name = name;
-    this.isTeacher = false;
+    this.isTeacher = isTeacher;
     this.session = session;
     this.roomName = roomName;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
