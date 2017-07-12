@@ -22,8 +22,11 @@ var state = true;
 
 window.onbeforeunload = function() {
 	ws.close();
-	state = false;
 };
+
+window.onload = function() {
+	ws = new WebSocket('wss://' + location.host + '/groupcall');
+}
 
 ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
@@ -57,6 +60,9 @@ ws.onmessage = function(message) {
 
 function register() {
 	if (!state) {
+		if (state == true) {
+			ws.close();
+		}
 		ws = new WebSocket('wss://' + location.host + '/groupcall');
 		state = true;
 	}
