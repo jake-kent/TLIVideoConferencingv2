@@ -70,7 +70,7 @@ function register() {
 }
 
 function onNewParticipant(request) {
-	receiveVideo(request.name);
+	receiveVideo(request);
 }
 
 function receiveVideoResponse(result) {
