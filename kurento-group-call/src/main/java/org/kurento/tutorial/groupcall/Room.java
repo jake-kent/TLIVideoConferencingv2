@@ -152,7 +152,9 @@ public class Room implements Closeable {
       teacherInRoom = true;
       for (final UserSession participant : this.getParticipants()) {
         if (!participant.equals(user)) {
-          final JsonElement participantObj = new JsonObject({"name": participant.getName(), "isTeacher": participant.getIsTeacher()});
+          final JsonObject participantObj = new JsonObject();
+          participantObj.addProperty("name", participant.getName());
+          participantObj.addProperty("isTeacher", participant.getIsTeacher());
           participantsArray.add(participantObj);
         }
       }
@@ -160,7 +162,9 @@ public class Room implements Closeable {
     else {
       for (final UserSession participant : this.getParticipants()) {
         if (participant.getIsTeacher() == true){
-          final JsonElement participantObj = new JsonObject({"name": participant.getName(), "isTeacher": participant.getIsTeacher()});
+          final JsonObject participantObj = new JsonObject();
+          participantObj.addProperty("name", participant.getName());
+          participantObj.addProperty("isTeacher", participant.getIsTeacher());
           participantsArray.add(participantObj);
         }
       }
