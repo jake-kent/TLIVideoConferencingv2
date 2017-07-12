@@ -81,7 +81,7 @@ public class Room implements Closeable {
 
   public void leave(UserSession user) throws IOException {
     log.debug("PARTICIPANT {}: Leaving room {}", user.getName(), this.name);
-    this.removeParticipant(user.getName());
+    this.removeParticipant(user);
     user.close();
   }
 
@@ -120,7 +120,8 @@ public class Room implements Closeable {
     return participantsList;
   }
 
-  private void removeParticipant(String name) throws IOException {
+  private void removeParticipant(UserSession user) throws IOException {
+    String name = user.name;
     participants.remove(name);
 
     log.debug("ROOM {}: notifying all users that {} is leaving the room", this.name, name);
@@ -129,14 +130,29 @@ public class Room implements Closeable {
     final JsonObject participantLeftJson = new JsonObject();
     participantLeftJson.addProperty("id", "participantLeft");
     participantLeftJson.addProperty("name", name);
-    for (final UserSession participant : participants.values()) {
-      try {
-        participant.cancelVideoFrom(name);
-        participant.sendMessage(participantLeftJson);
-      } catch (final IOException e) {
-        unnotifiedParticipants.add(participant.getName());
+    if (user.getIsTeacher() == true) {
+      for (final UserSession participant : participants.values()) {
+        try {
+          participant.cancelVideoFrom(name);
+          participant.sendMessage(participantLeftJson);
+        } catch (final IOException e) {
+          unnotifiedParticipants.add(participant.getName());
+        }
       }
     }
+    else {
+      for (final UserSession participant : participants.values()) {
+        if (participant.getIsTeacher() == true) {
+          try {
+            participant.cancelVideoFrom(name);
+            participant.sendMessage(participantLeftJson);
+          } catch (final IOException e) {
+            unnotifiedParticipants.add(participant.getName());
+          }
+        }
+      }
+    }
+    
 
     if (!unnotifiedParticipants.isEmpty()) {
       log.debug("ROOM {}: The users {} could not be notified that {} left the room", this.name,
