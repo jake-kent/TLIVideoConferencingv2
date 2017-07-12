@@ -70,7 +70,7 @@ public class Room implements Closeable {
     log.info("ROOM {}: adding participant {}", userName, userName);
 
     // TODO: increase the security of setting is teacher
-    boolean isTeacherUN = (userName.contains('teacher'));
+    boolean isTeacherUN = (userName.contains("teacher") || userName.contains("Teacher"));
 
     final UserSession participant = new UserSession(userName, this.name, session, isTeacherUN, this.pipeline);
     joinRoom(participant);
