@@ -24,11 +24,6 @@ window.onbeforeunload = function() {
 	ws.close();
 };
 
-window.onload = function() {
-	ws.close();
-	ws = new WebSocket('wss://' + location.host + '/groupcall');
-}
-
 ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
 	console.info('Received message: ' + message.data);
