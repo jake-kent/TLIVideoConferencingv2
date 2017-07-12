@@ -137,8 +137,9 @@ function leaveRoom() {
 	ws.close();
 }
 
-function receiveVideo(sender) {
-	var participant = new Participant(sender);
+function receiveVideo(senderObj) {
+	var sender = sender.name;
+	var participant = new Participant(sender, senderObj.isTeacher);
 	participants[sender] = participant;
 	var video = participant.getVideoElement();
 
