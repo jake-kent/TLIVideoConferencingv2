@@ -37,6 +37,7 @@ public class UserRegistry {
 
   public void register(UserSession user) {
     usersByName.put(user.getName(), user);
+    log.info("added user: {}", user.getName());
     usersBySessionId.put(user.getSession().getId(), user);
   }
 
@@ -54,6 +55,7 @@ public class UserRegistry {
 
   public UserSession removeBySession(WebSocketSession session) {
     final UserSession user = getBySession(session);
+    log.info("removed user: {}", user.getName());
     usersByName.remove(user.getName());
     usersBySessionId.remove(session.getId());
     return user;
