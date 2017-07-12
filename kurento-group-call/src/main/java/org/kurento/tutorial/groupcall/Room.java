@@ -121,7 +121,7 @@ public class Room implements Closeable {
   }
 
   private void removeParticipant(UserSession user) throws IOException {
-    String name = user.name;
+    String name = user.getName();
     participants.remove(name);
 
     log.debug("ROOM {}: notifying all users that {} is leaving the room", this.name, name);
