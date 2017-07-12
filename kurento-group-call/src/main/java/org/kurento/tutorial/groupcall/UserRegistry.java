@@ -38,7 +38,7 @@ public class UserRegistry {
   private final ConcurrentHashMap<String, UserSession> usersBySessionId = new ConcurrentHashMap<>();
 
   private static final Logger log = LoggerFactory.getLogger(CallHandler.class);
-  
+
   public void register(UserSession user) {
     usersByName.put(user.getName(), user);
     log.info("added user: {}", user.getName());
@@ -58,11 +58,13 @@ public class UserRegistry {
   }
 
   public UserSession removeBySession(WebSocketSession session) {
-    final UserSession user = getBySession(session);
-    log.info("removed user: {}", user.getName());
-    usersByName.remove(user.getName());
-    usersBySessionId.remove(session.getId());
-    return user;
+    if (session != null) {
+      final UserSession user = getBySession(session);
+      log.info("removed user: {}", user.getName());
+      usersByName.remove(user.getName());
+      usersBySessionId.remove(session.getId());
+      return user;
+    }
+    return null;
   }
-
 }
