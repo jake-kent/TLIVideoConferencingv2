@@ -133,6 +133,7 @@ public class Room implements Closeable {
     if (user.getIsTeacher() == true) {
       for (final UserSession participant : participants.values()) {
         try {
+          log.info("run 1");
           participant.cancelVideoFrom(name);
           participant.sendMessage(participantLeftJson);
         } catch (final IOException e) {
@@ -144,6 +145,7 @@ public class Room implements Closeable {
       for (final UserSession participant : participants.values()) {
         if (participant.getIsTeacher() == true) {
           try {
+            log.info("run 2");
             participant.cancelVideoFrom(name);
             participant.sendMessage(participantLeftJson);
           } catch (final IOException e) {
