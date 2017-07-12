@@ -60,10 +60,13 @@ public class UserRegistry {
   public UserSession removeBySession(WebSocketSession session) {
     if (session != null) {
       final UserSession user = getBySession(session);
-      log.info("removed user: {}", user.getName());
-      usersByName.remove(user.getName());
-      usersBySessionId.remove(session.getId());
-      return user;
+      if (user != null) {
+        log.info("removed user: {}", user.getName());
+        usersByName.remove(user.getName());
+        usersBySessionId.remove(session.getId());
+        return user;
+      }
+      return null;
     }
     return null;
   }
