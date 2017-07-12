@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.AbstractMap.SimpleEntry
 
 import javax.annotation.PreDestroy;
 
@@ -153,16 +152,16 @@ public class Room implements Closeable {
       teacherInRoom = true;
       for (final UserSession participant : this.getParticipants()) {
         if (!participant.equals(user)) {
-          final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add([participantName, participant.getIsTeacher()]);
+          final JsonElement participantObj = new JsonPrimitive({"name": participant.getName(), "isTeacher": participant.getIsTeacher()});
+          participantsArray.add(participantObj);
         }
       }
     }
     else {
       for (final UserSession participant : this.getParticipants()) {
         if (participant.getIsTeacher() == true){
-          final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add([participantName, participant.getIsTeacher()]);
+          final JsonElement participantObj = new JsonPrimitive({"name": participant.getName(), "isTeacher": participant.getIsTeacher()});
+          participantsArray.add(participantObj);
         }
       }
     }
