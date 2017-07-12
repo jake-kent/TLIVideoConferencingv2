@@ -25,6 +25,7 @@ window.onbeforeunload = function() {
 };
 
 window.onload = function() {
+	ws.close();
 	ws = new WebSocket('wss://' + location.host + '/groupcall');
 }
 
