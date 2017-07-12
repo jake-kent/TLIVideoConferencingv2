@@ -132,13 +132,13 @@ public class Room implements Closeable {
     participantLeftJson.addProperty("name", name);
     if (user.getIsTeacher() == true) {
       for (final UserSession participant : participants.values()) {
-        try {
+        //try {
           log.info("run 1");
           participant.cancelVideoFrom(name);
           //participant.sendMessage(participantLeftJson);
-        } catch (final IOException e) {
-          unnotifiedParticipants.add(participant.getName());
-        }
+        //} catch (final IOException e) {
+         // unnotifiedParticipants.add(participant.getName());
+        //}
       }
     }
     else {
