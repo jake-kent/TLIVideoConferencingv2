@@ -15,7 +15,7 @@
  *
  */
 
-var ws;
+var ws = new WebSocket('wss://' + location.host + '/groupcall');
 var participants = {};
 var name;
 
@@ -54,6 +54,9 @@ ws.onmessage = function(message) {
 }
 
 function register() {
+	if (ws) {
+		ws.close();
+	}
 	ws = new WebSocket('wss://' + location.host + '/groupcall');
 	name = document.getElementById('name').value;
 	var room = document.getElementById('roomName').value;
