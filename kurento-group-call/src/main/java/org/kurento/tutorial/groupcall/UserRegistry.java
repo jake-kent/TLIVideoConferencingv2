@@ -17,8 +17,6 @@
 
 package org.kurento.tutorial.groupcall;
 
-import java.io.IOException;
-
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -39,6 +37,8 @@ public class UserRegistry {
   private final ConcurrentHashMap<String, UserSession> usersByName = new ConcurrentHashMap<>();
   private final ConcurrentHashMap<String, UserSession> usersBySessionId = new ConcurrentHashMap<>();
 
+  private static final Logger log = LoggerFactory.getLogger(CallHandler.class);
+  
   public void register(UserSession user) {
     usersByName.put(user.getName(), user);
     log.info("added user: {}", user.getName());
