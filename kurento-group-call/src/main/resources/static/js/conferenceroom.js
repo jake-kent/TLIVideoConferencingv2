@@ -18,9 +18,11 @@
 var ws = new WebSocket('wss://' + location.host + '/groupcall');
 var participants = {};
 var name;
+var state = true;
 
 window.onbeforeunload = function() {
 	ws.close();
+	state = false;
 };
 
 ws.onmessage = function(message) {
@@ -54,10 +56,10 @@ ws.onmessage = function(message) {
 }
 
 function register() {
-	if (ws) {
-		ws.close();
+	if (!state) {
+		ws = new WebSocket('wss://' + location.host + '/groupcall');
+		state = true;
 	}
-	ws = new WebSocket('wss://' + location.host + '/groupcall');
 	name = document.getElementById('name').value;
 	var room = document.getElementById('roomName').value;
 
@@ -139,6 +141,7 @@ function leaveRoom() {
 	document.getElementById('room').style.display = 'none';
 
 	ws.close();
+	state = false;
 }
 
 function receiveVideo(senderObj) {
