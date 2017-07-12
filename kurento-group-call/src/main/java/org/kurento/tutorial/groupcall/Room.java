@@ -70,7 +70,7 @@ public class Room implements Closeable {
     log.info("ROOM {}: adding participant {}", userName, userName);
 
     // TODO: increase the security of setting is teacher
-    boolean isTeacherUN = userName.contains('teacher') || userName.contains('Teacher');
+    boolean isTeacherUN = (userName.contains('teacher') || userName.contains('Teacher'));
 
     final UserSession participant = new UserSession(userName, this.name, session, isTeacherUN, this.pipeline);
     joinRoom(participant);
@@ -153,7 +153,7 @@ public class Room implements Closeable {
       for (final UserSession participant : this.getParticipants()) {
         if (!participant.equals(user)) {
           final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add((participantName, participant.getIsTeacher()));
+          participantsArray.add(Pair(participantName, participant.getIsTeacher()));
         }
       }
     }
@@ -161,7 +161,7 @@ public class Room implements Closeable {
       for (final UserSession participant : this.getParticipants()) {
         if (participant.getIsTeacher() == true){
           final JsonElement participantName = new JsonPrimitive(participant.getName());
-          participantsArray.add((participantName, participant.getIsTeacher()));
+          participantsArray.add(Pair(participantName, participant.getIsTeacher()));
         }
       }
     }
