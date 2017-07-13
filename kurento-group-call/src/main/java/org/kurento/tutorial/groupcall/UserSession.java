@@ -57,6 +57,7 @@ public class UserSession implements Closeable {
   private final WebRtcEndpoint outgoingMedia;
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
   private RecorderEndpoint recorderCaller;
+  private boolean isRecording;
 
   private boolean isTeacher;
 
@@ -73,6 +74,7 @@ public class UserSession implements Closeable {
     this.isTeacher = isTeacher;
     this.session = session;
     this.roomName = roomName;
+    this.isRecording = false;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 
     this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
@@ -92,14 +94,6 @@ public class UserSession implements Closeable {
         }
       }
     });
-
-
-    // recording code
-    log.info("USER {}: begin recording in room {}", this.name, this.roomName);
-    recorderCaller = new RecorderEndpoint.Builder(this.pipeline, RECORDING_PATH + this.name + "-" + this.roomName + "-" + RECORDING_EXT)
-        .build();
-    this.outgoingMedia.connect(recorderCaller);
-    // END recording code
   }
 
   public WebRtcEndpoint getOutgoingWebRtcPeer() {
@@ -185,6 +179,15 @@ public class UserSession implements Closeable {
     log.debug("PARTICIPANT {}: obtained endpoint for {}", this.name, sender.getName());
     sender.getOutgoingWebRtcPeer().connect(incoming);
     
+    if (isRecording == false) {
+       // recording code
+      log.info("USER {}: begin recording in room {}", name, roomName);
+      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + "-" + RECORDING_EXT)
+          .build();
+      outgoingMedia.connect(recorderCaller);
+      // END recording code
+      isRecording = true;
+    }
 
     return incoming;
   }
