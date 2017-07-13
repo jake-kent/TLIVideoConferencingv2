@@ -103,7 +103,7 @@ function onExistingParticipants(msg) {
 		audio : true,
 		video : {
 			mandatory : {
-				maxWidth : 320,
+				maxWidth : 1280,
 				maxFrameRate : 15,
 				minFrameRate : 15
 			}
