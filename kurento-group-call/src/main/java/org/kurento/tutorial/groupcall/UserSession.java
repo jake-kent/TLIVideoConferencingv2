@@ -68,8 +68,8 @@ public class UserSession implements Closeable {
   public static final String RECORDING_PATH = "/tmp/" + df.format(new Date()) + "-";
   public static final String RECORDING_EXT = ".webm";
 
-  public UserSession(final String name, String roomName, final WebSocketSession session,
-      boolean isTeacher, MediaPipeline pipeline) {
+  public UserSession(final String name, final String roomName, final WebSocketSession session,
+      boolean isTeacher, final MediaPipeline pipeline) {
 
     this.pipeline = pipeline;
     this.name = name;
@@ -97,6 +97,7 @@ public class UserSession implements Closeable {
     });
 
     this.outgoingMedia.addMediaStateChangedListener(new EventListener<MediaStateChangedEvent>() {
+
       @Override public void onEvent(MediaStateChangedEvent event) {
         if (event.getNewState() == MediaState.CONNECTED) {
           // recording code
