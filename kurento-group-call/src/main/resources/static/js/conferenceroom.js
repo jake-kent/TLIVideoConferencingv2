@@ -169,8 +169,10 @@ function receiveVideo(senderObj) {
 function onParticipantLeft(request) {
 	console.log('Participant ' + request.name + ' left');
 	var participant = participants[request.name];
-	participant.dispose();
-	delete participants[request.name];
+	if (participant != null) {
+		participant.dispose();
+		delete participants[request.name];
+	}
 }
 
 function sendMessage(message) {

@@ -142,7 +142,7 @@ public class Room implements Closeable {
       }
     }
     else {
-      /*for (final UserSession participant : participants.values()) {
+      for (final UserSession participant : participants.values()) {
         if (participant.getIsTeacher() == true) {
           try {
             log.info("run 2");
@@ -152,7 +152,7 @@ public class Room implements Closeable {
             unnotifiedParticipants.add(participant.getName());
           }
         }
-      }*/
+      }
     }
     
 
