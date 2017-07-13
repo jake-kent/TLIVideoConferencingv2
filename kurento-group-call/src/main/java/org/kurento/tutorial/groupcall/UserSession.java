@@ -102,7 +102,7 @@ public class UserSession implements Closeable {
         if (event.getNewState() == MediaState.CONNECTED) {
           // recording code
           log.info("USER {}: begin recording in room {}", name, roomName);
-          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + "-" + RECORDING_EXT)
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + RECORDING_EXT)
               .build();
           outgoingMedia.connect(recorderCaller);
           // END recording code
