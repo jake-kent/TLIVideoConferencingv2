@@ -21,7 +21,7 @@ var name;
 var state = true;
 
 window.onbeforeunload = function() {
-	ws.close();
+	//ws.close();
 };
 
 ws.onmessage = function(message) {
