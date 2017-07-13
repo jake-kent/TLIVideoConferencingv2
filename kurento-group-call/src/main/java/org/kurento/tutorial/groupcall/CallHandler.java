@@ -92,6 +92,7 @@ public class CallHandler extends TextWebSocketHandler {
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     UserSession user = registry.removeBySession(session);
     if (user != null) {
+      user.clearRecording();
       roomManager.getRoom(user.getRoomName()).leave(user);
     }
   }

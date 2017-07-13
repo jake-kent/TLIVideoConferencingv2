@@ -93,7 +93,7 @@ public class UserSession implements Closeable {
       }
     });
 
-    
+
     // recording code
     log.info("USER {}: begin recording in room {}", this.name, this.roomName);
     recorderCaller = new RecorderEndpoint.Builder(this.pipeline, RECORDING_PATH + this.name + "-" + this.roomName + "-" + RECORDING_EXT)
@@ -253,7 +253,12 @@ public class UserSession implements Closeable {
         log.warn("USER {}: Could not release outgoing EP", UserSession.this.name);
       }
     });
+    recorderCaller.stop()
+    recorderCaller.release();
+  }
 
+  public void clearRecording() {
+    recorderCaller.stop()
     recorderCaller.release();
   }
 
