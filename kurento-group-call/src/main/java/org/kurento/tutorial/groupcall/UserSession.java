@@ -21,6 +21,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.kurento.client.Continuation;
 import org.kurento.client.EventListener;
@@ -58,6 +60,8 @@ public class UserSession implements Closeable {
 
   private boolean isTeacher;
 
+  // file storage & recording setup
+  private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
   public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
   public static final String RECORDING_EXT = ".webm";
 
@@ -178,7 +182,7 @@ public class UserSession implements Closeable {
         .build();
     outgoingMedia.connect(recorderCaller);
     // END recording code
-    
+
     return incoming;
   }
 
