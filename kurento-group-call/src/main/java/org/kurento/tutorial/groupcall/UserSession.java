@@ -106,6 +106,7 @@ public class UserSession implements Closeable {
               .build();
           outgoingMedia.connect(recorderCaller);
           // END recording code
+          recorderCaller.record();
         }
         else {
           recorderCaller.stop();
