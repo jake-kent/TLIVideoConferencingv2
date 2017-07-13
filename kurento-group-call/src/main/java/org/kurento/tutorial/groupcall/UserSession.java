@@ -253,12 +253,12 @@ public class UserSession implements Closeable {
         log.warn("USER {}: Could not release outgoing EP", UserSession.this.name);
       }
     });
-    recorderCaller.stop()
+    recorderCaller.stop();
     recorderCaller.release();
   }
 
   public void clearRecording() {
-    recorderCaller.stop()
+    recorderCaller.stop();
     recorderCaller.release();
   }
 
