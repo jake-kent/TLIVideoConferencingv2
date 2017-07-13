@@ -97,12 +97,12 @@ public class Room implements Closeable {
 
     for (final UserSession participant : participants.values()) {
       try {
-        if (participant.getIsTeacher() == true) {
+        /*if (participant.getIsTeacher() == true) {
           participant.sendMessage(newParticipantMsg);
         }
-        else if (participant.getIsTeacher() == false && newParticipant.getIsTeacher() == true) {
-          participant.sendMessage(newParticipantMsg);
-        }
+        else if (participant.getIsTeacher() == false && newParticipant.getIsTeacher() == true) {*/
+        participant.sendMessage(newParticipantMsg);
+        //}
         
       } catch (final IOException e) {
         log.debug("ROOM {}: participant {} could not be notified", name, participant.getName(), e);
@@ -130,17 +130,17 @@ public class Room implements Closeable {
     final JsonObject participantLeftJson = new JsonObject();
     participantLeftJson.addProperty("id", "participantLeft");
     participantLeftJson.addProperty("name", name);
-    if (user.getIsTeacher() == true) {
-      for (final UserSession participant : participants.values()) {
-        try {
-          log.info("run 1");
-          participant.cancelVideoFrom(name);
-          participant.sendMessage(participantLeftJson);
-        } catch (final IOException e) {
-          unnotifiedParticipants.add(participant.getName());
-        }
+    //if (user.getIsTeacher() == true) {
+    for (final UserSession participant : participants.values()) {
+      try {
+        log.info("run 1");
+        participant.cancelVideoFrom(name);
+        participant.sendMessage(participantLeftJson);
+      } catch (final IOException e) {
+        unnotifiedParticipants.add(participant.getName());
       }
     }
+    /*}
     else {
       for (final UserSession participant : participants.values()) {
         if (participant.getIsTeacher() == true) {
@@ -153,7 +153,7 @@ public class Room implements Closeable {
           }
         }
       }
-    }
+    }*/
     
 
     if (!unnotifiedParticipants.isEmpty()) {
@@ -167,17 +167,17 @@ public class Room implements Closeable {
 
     final JsonArray participantsArray = new JsonArray();
     boolean teacherInRoom = false;
-    if (user.getIsTeacher() == true) {
-      teacherInRoom = true;
-      for (final UserSession participant : this.getParticipants()) {
-        if (!participant.equals(user)) {
-          final JsonObject participantObj = new JsonObject();
-          participantObj.addProperty("name", participant.getName());
-          participantObj.addProperty("isTeacher", participant.getIsTeacher());
-          participantsArray.add(participantObj);
-        }
+    //if (user.getIsTeacher() == true) {
+    teacherInRoom = true;
+    for (final UserSession participant : this.getParticipants()) {
+      if (!participant.equals(user)) {
+        final JsonObject participantObj = new JsonObject();
+        participantObj.addProperty("name", participant.getName());
+        participantObj.addProperty("isTeacher", participant.getIsTeacher());
+        participantsArray.add(participantObj);
       }
     }
+    /*}
     else {
       for (final UserSession participant : this.getParticipants()) {
         if (participant.getIsTeacher() == true){
@@ -187,7 +187,7 @@ public class Room implements Closeable {
           participantsArray.add(participantObj);
         }
       }
-    }
+    }*/
 
     final JsonObject existingParticipantsMsg = new JsonObject();
     existingParticipantsMsg.addProperty("id", "existingParticipants");
