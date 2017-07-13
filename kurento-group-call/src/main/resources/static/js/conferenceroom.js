@@ -55,13 +55,13 @@ ws.onmessage = function(message) {
 }
 
 function register() {
-	if (!state) {
+	/*if (!state) {
 		if (state == true) {
 			ws.close();
 		}
 		ws = new WebSocket('wss://' + location.host + '/groupcall');
 		state = true;
-	}
+	}*/
 	name = document.getElementById('name').value;
 	var room = document.getElementById('roomName').value;
 

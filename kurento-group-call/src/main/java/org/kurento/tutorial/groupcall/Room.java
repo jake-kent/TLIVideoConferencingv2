@@ -132,17 +132,17 @@ public class Room implements Closeable {
     participantLeftJson.addProperty("name", name);
     if (user.getIsTeacher() == true) {
       for (final UserSession participant : participants.values()) {
-        //try {
+        try {
           log.info("run 1");
           participant.cancelVideoFrom(name);
-          //participant.sendMessage(participantLeftJson);
-        //} catch (final IOException e) {
-         // unnotifiedParticipants.add(participant.getName());
-        //}
+          participant.sendMessage(participantLeftJson);
+        } catch (final IOException e) {
+          unnotifiedParticipants.add(participant.getName());
+        }
       }
     }
     else {
-      for (final UserSession participant : participants.values()) {
+      /*for (final UserSession participant : participants.values()) {
         if (participant.getIsTeacher() == true) {
           try {
             log.info("run 2");
@@ -152,7 +152,7 @@ public class Room implements Closeable {
             unnotifiedParticipants.add(participant.getName());
           }
         }
-      }
+      }*/
     }
     
 
