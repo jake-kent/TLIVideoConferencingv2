@@ -256,11 +256,13 @@ public class UserSession implements Closeable {
         log.warn("USER {}: Could not release outgoing EP", UserSession.this.name);
       }
     });
+    log.info("USER {}: END recording in room {}", name, roomName);
     recorderCaller.stop();
     recorderCaller.release();
   }
 
   public void clearRecording() {
+    log.info("USER {}: END recording in room {}", name, roomName);
     recorderCaller.stop();
     recorderCaller.release();
   }
