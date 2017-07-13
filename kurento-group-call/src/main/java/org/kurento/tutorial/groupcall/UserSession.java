@@ -63,7 +63,7 @@ public class UserSession implements Closeable {
 
   // file storage & recording setup
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
-  public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
+  public static final String RECORDING_PATH = "/tmp/" + df.format(new Date()) + "-";
   public static final String RECORDING_EXT = ".webm";
 
   public UserSession(final String name, String roomName, final WebSocketSession session,
