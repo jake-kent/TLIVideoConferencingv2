@@ -28,6 +28,7 @@ import org.kurento.client.IceCandidate;
 import org.kurento.client.IceCandidateFoundEvent;
 import org.kurento.client.MediaPipeline;
 import org.kurento.client.WebRtcEndpoint;
+import org.kurento.client.RecorderEndpoint;
 import org.kurento.jsonrpc.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,8 +54,12 @@ public class UserSession implements Closeable {
   private final String roomName;
   private final WebRtcEndpoint outgoingMedia;
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
+  private RecorderEndpoint recorderCaller;
 
   private boolean isTeacher;
+
+  public static final String RECORDING_PATH = "file:///tmp/" + df.format(new Date()) + "-";
+  public static final String RECORDING_EXT = ".webm";
 
   public UserSession(final String name, String roomName, final WebSocketSession session,
       boolean isTeacher, MediaPipeline pipeline) {
@@ -167,7 +172,13 @@ public class UserSession implements Closeable {
 
     log.debug("PARTICIPANT {}: obtained endpoint for {}", this.name, sender.getName());
     sender.getOutgoingWebRtcPeer().connect(incoming);
-
+    
+    // recording code
+    recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + this.name + "-" + this.roomName + "-" + RECORDING_EXT)
+        .build();
+    outgoingMedia.connect(recorderCaller);
+    // END recording code
+    
     return incoming;
   }
 
