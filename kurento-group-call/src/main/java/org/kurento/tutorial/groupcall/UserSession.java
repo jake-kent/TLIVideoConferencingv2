@@ -251,6 +251,8 @@ public class UserSession implements Closeable {
         log.warn("USER {}: Could not release outgoing EP", UserSession.this.name);
       }
     });
+
+    recorderCaller.release();
   }
 
   public void sendMessage(JsonObject message) throws IOException {
