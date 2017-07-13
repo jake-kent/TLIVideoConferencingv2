@@ -105,8 +105,6 @@ function onExistingParticipants(msg) {
 			mandatory : {
 				minWidth: 1280,
 				minHeight: 980,
-				maxWidth: 1280,
-				maxHeight: 980,
 				maxFrameRate : 24,
 				minFrameRate : 15
 			}
