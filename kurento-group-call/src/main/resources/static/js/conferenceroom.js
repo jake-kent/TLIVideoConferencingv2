@@ -102,11 +102,9 @@ function onExistingParticipants(msg) {
 	var constraints = {
 		audio : true,
 		video : {
+			width: 1280,
+			height: 960,
 			mandatory : {
-				width: 1280,
-				height: 960,
-				minWidth: 1280,
-				minHeight: 960,
 				maxFrameRate : 24,
 				minFrameRate : 15
 			}
