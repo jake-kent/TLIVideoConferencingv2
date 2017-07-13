@@ -92,6 +92,14 @@ public class UserSession implements Closeable {
         }
       }
     });
+
+    
+    // recording code
+    log.info("USER {}: begin recording in room {}", this.name, this.roomName);
+    recorderCaller = new RecorderEndpoint.Builder(this.pipeline, RECORDING_PATH + this.name + "-" + this.roomName + "-" + RECORDING_EXT)
+        .build();
+    this.outgoingMedia.connect(recorderCaller);
+    // END recording code
   }
 
   public WebRtcEndpoint getOutgoingWebRtcPeer() {
@@ -259,13 +267,6 @@ public class UserSession implements Closeable {
   public void addCandidate(IceCandidate candidate, String name) {
     if (this.name.compareTo(name) == 0) {
       outgoingMedia.addIceCandidate(candidate);
-
-      // recording code
-      log.info("USER {}: begin recording in room {}", this.name, this.roomName);
-      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + this.name + "-" + this.roomName + "-" + RECORDING_EXT)
-          .build();
-      outgoingMedia.connect(recorderCaller);
-      // END recording code
     } else {
       WebRtcEndpoint webRtc = incomingMedia.get(name);
       if (webRtc != null) {
