@@ -76,7 +76,6 @@ public class UserSession implements Closeable {
     this.roomName = roomName;
     this.isRecording = false;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
-
     this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 
       @Override
@@ -91,6 +90,23 @@ public class UserSession implements Closeable {
           }
         } catch (IOException e) {
           log.debug(e.getMessage());
+        }
+      }
+    });
+
+    this.outgoingMedia.addMediaStateChangedListener(new EventListener<MediaStateChangedEvent>() {
+      @Override public void onEvent(MediaStateChangedEvent event) {
+        if (event.getNewState() == MediaState.CONNECTED) {
+          // recording code
+          log.info("USER {}: begin recording in room {}", name, roomName);
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + "-" + RECORDING_EXT)
+              .build();
+          outgoingMedia.connect(recorderCaller);
+          // END recording code
+        }
+        else {
+          recorderCaller.stop();
+          recorderCaller.release();
         }
       }
     });
@@ -178,16 +194,6 @@ public class UserSession implements Closeable {
 
     log.debug("PARTICIPANT {}: obtained endpoint for {}", this.name, sender.getName());
     sender.getOutgoingWebRtcPeer().connect(incoming);
-    
-    if (isRecording == false) {
-       // recording code
-      log.info("USER {}: begin recording in room {}", name, roomName);
-      recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + "-" + RECORDING_EXT)
-          .build();
-      outgoingMedia.connect(recorderCaller);
-      // END recording code
-      isRecording = true;
-    }
 
     return incoming;
   }
@@ -257,8 +263,6 @@ public class UserSession implements Closeable {
       }
     });
     log.info("USER {}: END recording in room {}", name, roomName);
-    recorderCaller.stop();
-    recorderCaller.release();
   }
 
   public void clearRecording() {
