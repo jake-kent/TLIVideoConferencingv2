@@ -29,6 +29,8 @@ import org.kurento.client.EventListener;
 import org.kurento.client.IceCandidate;
 import org.kurento.client.IceCandidateFoundEvent;
 import org.kurento.client.MediaPipeline;
+import org.kurento.client.MediaState;
+import org.kurento.client.MediaStateChangedEvent;
 import org.kurento.client.WebRtcEndpoint;
 import org.kurento.client.RecorderEndpoint;
 import org.kurento.jsonrpc.JsonUtils;
