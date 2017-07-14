@@ -104,7 +104,7 @@ function onExistingParticipants(msg) {
 		video : {
 			width: 1280,
 			height: 960,
-			frameRate: 24
+			frameRate: 15
 		}
 	};
 	console.log(name + " registered in room " + room);
