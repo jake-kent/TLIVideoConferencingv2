@@ -80,10 +80,10 @@ public class UserSession implements Closeable {
     this.isRecording = false;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 
-    this.outgoingMedia.setMinVideoRecvBandwidth(250);
-    this.outgoingMedia.setMinVideoSendBandwidth(250);
-    this.outgoingMedia.setMaxVideoRecvBandwidth(250);
-    this.outgoingMedia.setMaxVideoSendBandwidth(250);
+    this.outgoingMedia.setMinVideoRecvBandwidth(2000);
+    this.outgoingMedia.setMinVideoSendBandwidth(2000);
+    this.outgoingMedia.setMaxVideoRecvBandwidth(2000);
+    this.outgoingMedia.setMaxVideoSendBandwidth(2000);
 
     this.outgoingMedia.addIceCandidateFoundListener(new EventListener<IceCandidateFoundEvent>() {
 
