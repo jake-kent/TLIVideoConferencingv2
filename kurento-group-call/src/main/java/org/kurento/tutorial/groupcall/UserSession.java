@@ -29,6 +29,7 @@ import org.kurento.client.EventListener;
 import org.kurento.client.IceCandidate;
 import org.kurento.client.IceCandidateFoundEvent;
 import org.kurento.client.MediaPipeline;
+import org.kurento.client.MediaProfileSpecType;
 import org.kurento.client.MediaState;
 import org.kurento.client.MediaStateChangedEvent;
 import org.kurento.client.WebRtcEndpoint;
@@ -66,7 +67,7 @@ public class UserSession implements Closeable {
   // file storage & recording setup
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
   public static final String RECORDING_PATH = "file:///tmp/recordings/" + df.format(new Date()) + "-";
-  public static final String RECORDING_EXT = ".webm";
+  public static final String RECORDING_EXT = ".mp4";
 
   public UserSession(final String name, final String roomName, final WebSocketSession session,
       boolean isTeacher, final MediaPipeline pipeline) {
@@ -108,8 +109,8 @@ public class UserSession implements Closeable {
         if (event.getNewState() == MediaState.CONNECTED) {
           // recording code
           log.info("USER {}: begin recording in room {}", name, roomName);
-          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + RECORDING_EXT)
-              .build();
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + RECORDING_EXT).
+              withMediaProfile(MediaProfileSpecType.MP4).build();
           outgoingMedia.connect(recorderCaller);
           // END recording code
           recorderCaller.record();
