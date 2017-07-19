@@ -19,6 +19,8 @@ package org.kurento.tutorial.groupcall;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.text.SimpleDateFormat;
@@ -303,6 +305,7 @@ public class UserSession implements Closeable {
     if (pendingConversion == true) {
       log.info("Run Conversion");
       try {
+        String result = null;
         Runtime r = Runtime.getRuntime();                    
 
         Process p = r.exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
