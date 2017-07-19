@@ -127,7 +127,7 @@ public class UserSession implements Closeable {
           if (pendingConversion == true) {
             log.info("Run Conversion");
             try {
-              Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+              Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 -q:ascale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
             }
             catch (IOException e) {
               log.info(e.getMessage());
@@ -303,7 +303,7 @@ public class UserSession implements Closeable {
     if (pendingConversion == true) {
       log.info("Run Conversion");
       try {
-        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 -q:ascale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
       }
       catch (IOException e) {
         log.info(e.getMessage());
