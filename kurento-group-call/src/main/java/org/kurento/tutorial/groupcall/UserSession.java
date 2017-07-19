@@ -303,7 +303,18 @@ public class UserSession implements Closeable {
     if (pendingConversion == true) {
       log.info("Run Conversion");
       try {
-        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+        Runtime r = Runtime.getRuntime();                    
+
+        Process p = r.exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+
+        BufferedReader in =
+            new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            System.out.println(inputLine);
+            result += inputLine;
+        }
+        in.close();
       }
       catch (IOException e) {
         log.info(e.getMessage());
