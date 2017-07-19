@@ -61,8 +61,7 @@ public class UserSession implements Closeable {
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
   private RecorderEndpoint recorderCaller;
 
-  private String preConvertedName;
-  private boolean pendingConversion;
+
 
   private boolean isTeacher;
 
@@ -80,6 +79,8 @@ public class UserSession implements Closeable {
     this.session = session;
     this.roomName = roomName;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
+    this.preConvertedName = "";
+    this.pendingConversion = false;
 
     this.outgoingMedia.setMinVideoRecvBandwidth(2000);
     this.outgoingMedia.setMinVideoSendBandwidth(2000);
@@ -121,6 +122,7 @@ public class UserSession implements Closeable {
           recorderCaller.stop();
           recorderCaller.release();
           //convert
+          log.info("should run {}", this.pendingConversion);
           if (pendingConversion == true) {
             log.info("Run Conversion");
             try {
@@ -295,6 +297,7 @@ public class UserSession implements Closeable {
     recorderCaller.stop();
     recorderCaller.release();
     // conversion
+    log.info("should run {}", this.pendingConversion);
     if (pendingConversion == true) {
       log.info("Run Conversion");
       try {
