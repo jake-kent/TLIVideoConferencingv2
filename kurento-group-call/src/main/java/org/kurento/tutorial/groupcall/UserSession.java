@@ -60,7 +60,9 @@ public class UserSession implements Closeable {
   private final WebRtcEndpoint outgoingMedia;
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
   private RecorderEndpoint recorderCaller;
-  private boolean isRecording;
+
+  private String preConvertedName;
+  private boolean pendingConversion;
 
   private boolean isTeacher;
 
@@ -77,7 +79,6 @@ public class UserSession implements Closeable {
     this.isTeacher = isTeacher;
     this.session = session;
     this.roomName = roomName;
-    this.isRecording = false;
     this.outgoingMedia = new WebRtcEndpoint.Builder(pipeline).build();
 
     this.outgoingMedia.setMinVideoRecvBandwidth(2000);
@@ -109,15 +110,24 @@ public class UserSession implements Closeable {
         if (event.getNewState() == MediaState.CONNECTED) {
           // recording code
           log.info("USER {}: begin recording in room {}", name, roomName);
-          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + name + "-" + roomName + RECORDING_EXT).
+          preConvertedName =  name + "-" + roomName;
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + preConvertedName + RECORDING_EXT).
               withMediaProfile(MediaProfileSpecType.MP4).build();
           outgoingMedia.connect(recorderCaller);
-          // END recording code
           recorderCaller.record();
+          // END recording code
+          pendingConversion = true;
         }
         else {
           recorderCaller.stop();
           recorderCaller.release();
+          //convert
+          if (pendingConversion == true) {
+            log.info("Run Conversion");
+            Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+            //Runtime.getRuntime().exec("ffmpeg -i" + RECORDING_PATH + preConvertedName + RECORDING_EXT + "-profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls " + RECORDING_PATH + preConvertedName + ".m3u8");
+          }
+          pendingConversion = false
         }
       }
     });
@@ -280,6 +290,12 @@ public class UserSession implements Closeable {
     log.info("USER {}: END recording in room {}", name, roomName);
     recorderCaller.stop();
     recorderCaller.release();
+    // conversion
+    if (pendingConversion == true) {
+      log.info("Run Conversion");
+      Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+    }
+    pendingConversion = false;
   }
 
   public void sendMessage(JsonObject message) throws IOException {
