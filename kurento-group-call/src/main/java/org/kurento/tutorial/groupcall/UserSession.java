@@ -123,7 +123,7 @@ public class UserSession implements Closeable {
           recorderCaller.stop();
           recorderCaller.release();
           //convert
-          log.info("should run {}", this.pendingConversion);
+          log.info("should run {}", pendingConversion);
           if (pendingConversion == true) {
             log.info("Run Conversion");
             try {
