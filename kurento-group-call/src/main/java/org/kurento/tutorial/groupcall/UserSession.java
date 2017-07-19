@@ -69,7 +69,7 @@ public class UserSession implements Closeable {
   // file storage & recording setup
   private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss-S");
   public static final String RECORDING_PATH = "file:///tmp/recordings/" + df.format(new Date()) + "-";
-  public static final String RECORDING_EXT = ".mp4";
+  public static final String RECORDING_EXT = ".webm";
 
   public UserSession(final String name, final String roomName, final WebSocketSession session,
       boolean isTeacher, final MediaPipeline pipeline) {
@@ -111,8 +111,7 @@ public class UserSession implements Closeable {
           // recording code
           log.info("USER {}: begin recording in room {}", name, roomName);
           preConvertedName =  name + "-" + roomName;
-          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + preConvertedName + RECORDING_EXT).
-              withMediaProfile(MediaProfileSpecType.MP4).build();
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + preConvertedName + RECORDING_EXT).build();
           outgoingMedia.connect(recorderCaller);
           recorderCaller.record();
           // END recording code
