@@ -318,6 +318,7 @@ public class UserSession implements Closeable {
             result += inputLine;
         }
         in.close();
+        log.info("FFMPEG output: {}", result);
       }
       catch (IOException e) {
         log.info(e.getMessage());
