@@ -61,7 +61,8 @@ public class UserSession implements Closeable {
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
   private RecorderEndpoint recorderCaller;
 
-
+  private String preConvertedName;
+  private boolean pendingConversion;
 
   private boolean isTeacher;
 
