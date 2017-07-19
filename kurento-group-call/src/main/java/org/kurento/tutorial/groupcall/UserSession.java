@@ -127,7 +127,7 @@ public class UserSession implements Closeable {
             Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
             //Runtime.getRuntime().exec("ffmpeg -i" + RECORDING_PATH + preConvertedName + RECORDING_EXT + "-profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls " + RECORDING_PATH + preConvertedName + ".m3u8");
           }
-          pendingConversion = false
+          pendingConversion = false;
         }
       }
     });
