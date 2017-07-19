@@ -291,6 +291,7 @@ public class UserSession implements Closeable {
       }
     });
     log.info("USER {}: END recording in room {}", name, roomName);
+    clearRecording();
   }
 
   public void clearRecording() {
