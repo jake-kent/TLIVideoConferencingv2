@@ -61,8 +61,8 @@ public class UserSession implements Closeable {
   private final ConcurrentMap<String, WebRtcEndpoint> incomingMedia = new ConcurrentHashMap<>();
   private RecorderEndpoint recorderCaller;
 
-  private String preConvertedName;
-  private boolean pendingConversion;
+  public String preConvertedName;
+  public boolean pendingConversion;
 
   private boolean isTeacher;
 
@@ -112,29 +112,29 @@ public class UserSession implements Closeable {
         if (event.getNewState() == MediaState.CONNECTED) {
           // recording code
           log.info("USER {}: begin recording in room {}", name, roomName);
-          preConvertedName =  name + "-" + roomName;
-          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + preConvertedName + RECORDING_EXT).build();
+          this.preConvertedName =  name + "-" + roomName;
+          recorderCaller = new RecorderEndpoint.Builder(pipeline, RECORDING_PATH + this.preConvertedName + RECORDING_EXT).build();
           outgoingMedia.connect(recorderCaller);
           recorderCaller.record();
           // END recording code
-          pendingConversion = true;
+          this.pendingConversion = true;
         }
         else {
           recorderCaller.stop();
           recorderCaller.release();
           //convert
-          log.info("should run {}", pendingConversion);
-          if (pendingConversion == true) {
+          log.info("should run {}", this.pendingConversion);
+          if (this.pendingConversion == true) {
             log.info("Run Conversion");
             try {
-              Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+              Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + this.preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + this.preConvertedName + ".mp4");
             }
             catch (IOException e) {
               log.debug(e.getMessage());
             }
             //Runtime.getRuntime().exec("ffmpeg -i" + RECORDING_PATH + preConvertedName + RECORDING_EXT + "-profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls " + RECORDING_PATH + preConvertedName + ".m3u8");
           }
-          pendingConversion = false;
+          this.pendingConversion = false;
         }
       }
     });
@@ -299,16 +299,16 @@ public class UserSession implements Closeable {
     recorderCaller.release();
     // conversion
     log.info("should run {}", this.pendingConversion);
-    if (pendingConversion == true) {
+    if (this.pendingConversion == true) {
       log.info("Run Conversion");
       try {
-        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + this.preConvertedName + RECORDING_EXT + " -qscale 0 " + RECORDING_PATH + this.preConvertedName + ".mp4");
       }
       catch (IOException e) {
         log.debug(e.getMessage());
       }
     }
-    pendingConversion = false;
+    this.pendingConversion = false;
   }
 
   public void sendMessage(JsonObject message) throws IOException {
