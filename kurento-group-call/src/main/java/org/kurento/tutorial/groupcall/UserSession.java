@@ -123,19 +123,28 @@ public class UserSession implements Closeable {
           pendingConversion = true;
         }
         else {
+          log.info("USER {}: END recording in room {}", name, roomName);
           recorderCaller.stop();
           recorderCaller.release();
-          //convert
+          // conversion
           log.info("should run {}", pendingConversion);
           if (pendingConversion == true) {
             log.info("Run Conversion");
-            try {
-              Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 -q:ascale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
-            }
-            catch (IOException e) {
-              log.info(e.getMessage());
-            }
-            //Runtime.getRuntime().exec("ffmpeg -i" + RECORDING_PATH + preConvertedName + RECORDING_EXT + "-profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls " + RECORDING_PATH + preConvertedName + ".m3u8");
+            new Thread(new Runnable() {
+              public void run(){
+                 try {
+                  Process proc = Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+                  proc.waitFor();
+                  Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
+                }
+                catch (IOException e) {
+                  log.info(e.getMessage());
+                }
+                catch (InterruptedException ie) {
+                  log.info(ie.getMessage());
+                }
+              }
+            }).start();
           }
           pendingConversion = false;
         }
