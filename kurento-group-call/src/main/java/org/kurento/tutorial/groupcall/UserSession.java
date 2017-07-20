@@ -19,7 +19,7 @@ package org.kurento.tutorial.groupcall;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.Process
+import java.lang.Process;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.text.SimpleDateFormat;
