@@ -19,6 +19,7 @@ package org.kurento.tutorial.groupcall;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.InterruptedException
 import java.lang.Process;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -310,6 +311,9 @@ public class UserSession implements Closeable {
       }
       catch (IOException e) {
         log.info(e.getMessage());
+      }
+      catch (InterruptedException ie) {
+        log.info(ie.getMessage());
       }
     }
     pendingConversion = false;
