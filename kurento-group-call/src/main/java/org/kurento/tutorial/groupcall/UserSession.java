@@ -305,8 +305,8 @@ public class UserSession implements Closeable {
     if (pendingConversion == true) {
       log.info("Run Conversion");
       try {
-        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName + ".m3u8");
-        //ffmpeg -i 2017-07-19_17-09-23-477-Teacher1-Room1.webm -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls testout1.m3u8
+        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
+        Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
       }
       catch (IOException e) {
         log.info(e.getMessage());
