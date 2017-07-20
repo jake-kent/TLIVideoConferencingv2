@@ -133,8 +133,10 @@ public class UserSession implements Closeable {
             new Thread(new Runnable() {
               public void run(){
                  try {
+                  log.info("Running: {}", "ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
                   Process proc = Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
                   proc.waitFor();
+                  log.info("Running: {}", "ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
                   Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
                 }
                 catch (IOException e) {
@@ -317,8 +319,10 @@ public class UserSession implements Closeable {
       new Thread(new Runnable() {
         public void run(){
            try {
+            log.info("Running: {}", "ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
             Process proc = Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + RECORDING_EXT + " -strict -2 -q:vscale 0 " + RECORDING_PATH + preConvertedName + ".mp4");
             proc.waitFor();
+            log.info("Running: {}", "ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
             Runtime.getRuntime().exec("ffmpeg -i " + RECORDING_PATH + preConvertedName + ".mp4 -profile:v baseline -level 3.0 -s 1280x960 -start_number 0 -hls_time 10 -hls_list_size 0 -strict -2 -f hls " + RECORDING_PATH + preConvertedName +".m3u8");
           }
           catch (IOException e) {
